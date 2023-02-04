@@ -25,7 +25,6 @@ const AddForm = () => {
         body: JSON.stringify(values),
       });
       let data = await result.json();
-      console.log(data)
       if (data !== null || data.content) {
         form.resetFields();
         if(data.content) {
