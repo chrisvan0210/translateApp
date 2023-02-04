@@ -5,13 +5,14 @@
   align-items: center;
   padding: 2rem;
   min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .mainnav{
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
-  border: solid 1px red;
 }
 .mainnav > button {
   margin: 0 5px;
@@ -21,7 +22,6 @@
 .menu{
   width: 100%;
   display: none;
-  border: solid 1px red;
 
 }
 .menu.active{

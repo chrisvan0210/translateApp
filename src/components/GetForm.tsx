@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select, message } from "antd";
 import { useState } from "react";
-import { AddFormDiv } from "./styled";
-
+import { AddFormDiv, ContentsDiv } from "./styled";
+import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 interface LanguagesType {
   en: string;
   vn: string;
@@ -11,11 +11,21 @@ interface LanguagesType {
 
 let baseUrl = "http://localhost:3000/api/";
 const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
 };
+
+const initialState = {
+  en: "",
+  vn: "",
+  cn: "",
+  th: "",
+};
+
 function GetForm() {
-  const [translate, setTranslate] = useState<LanguagesType>();
+  const [translate, setTranslate] = useState<LanguagesType>(initialState);
+  const [form] = Form.useForm();
+  const [value, copy] = useCopyToClipboard();
 
   const onFinish = async (values: any) => {
     try {
@@ -25,20 +35,44 @@ function GetForm() {
         body: JSON.stringify(values),
       });
       let data = await result.json();
-      setTranslate(data.content);
-      message.success("Added successfully!");
+      if (data !== null && data.content) {
+        setTranslate(data.content);
+        message.success("Get successfully!");
+      } else {
+        setTranslate(initialState);
+        message.warning("The words are not exist!");
+      }
     } catch (err) {
       console.log(err);
-      message.info("Added Failed!");
     }
   };
   const onFinishFailed = (err: any) => {
     console.log("failed", err);
   };
+
+  let transArray = Object.keys(translate).map((key) => [
+    key,
+    translate[key as keyof LanguagesType],
+  ]);
+  const renderText = transArray.map((item, index) => (
+    <div className="result-each" key={index}>
+      <div>{item[0].toUpperCase()}: </div>
+      {translate?.vn && (
+        <div className="box-text">
+          <p>{item[1]}</p>
+          <Button type="dashed" onClick={() => copy(item[1])}>
+            Copy
+          </Button>
+        </div>
+      )}
+    </div>
+  ));
+
   return (
     <AddFormDiv>
       <Form
         name="basic"
+        form={form}
         {...layout}
         style={{ width: "100%" }}
         initialValues={{ remember: true }}
@@ -52,19 +86,25 @@ function GetForm() {
           rules={[{ required: true, message: "Please input your username!" }]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
-          <Input.TextArea rows={4} />
+          <Input.TextArea rows={3} />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
+          <Button
+            type="primary"
+            danger
+            htmlType="button"
+            onClick={() => form.resetFields()}
+          >
+            Clear
+          </Button>
         </Form.Item>
       </Form>
-      <div>
-        <div>VN: {translate?.vn}</div>
-        <div>CN: {translate?.cn}</div>
-        <div>TH: {translate?.th}</div>
-      </div>
+      <ContentsDiv>
+        <div className="results">{renderText}</div>
+      </ContentsDiv>
     </AddFormDiv>
   );
 }

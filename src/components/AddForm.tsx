@@ -10,24 +10,32 @@ interface ContentType {
 let baseUrl = "http://localhost:3000/api/";
 
 const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
 };
 
 const AddForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = async (values: ContentType) => {
-   
-    form.resetFields();
     try {
       const result = await fetch(baseUrl + `/add/all-lang`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify(values),
       });
-      //   console.log(await result.json());
-      message.success("Added successfully!");
+      let data = await result.json();
+      console.log(data)
+      if (data !== null || data.content) {
+        form.resetFields();
+        if(data.content) {
+            message.success("Added successfully!");
+        }else{
+            message.success("Updated the words already exist!");
+        }
+      } else {
+        message.warning("Add fail!");
+      }
     } catch (err) {
       console.log(err);
       message.info("Added Failed!");
@@ -52,7 +60,7 @@ const AddForm = () => {
         <Form.Item
           label="English Contents"
           name="english"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ required: true, message: "Please input english contents!" }]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
           <Input.TextArea rows={4} />
@@ -61,12 +69,14 @@ const AddForm = () => {
         <Form.Item
           label="Translation"
           name="value"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[{ required: true, message: "Please input the translation" }]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
           <Input.TextArea rows={4} />
         </Form.Item>
-        <Form.Item label="Language" name="lang">
+        <Form.Item label="Language" name="lang"
+        rules={[{ required: true, message: "Please select the language!" }]}
+        >
           <Select
             style={{ width: 120 }}
             options={[
@@ -77,9 +87,17 @@ const AddForm = () => {
             placeholder="select"
           />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
           <Button type="primary" htmlType="submit">
             Submit
+          </Button>
+          <Button
+            type="primary"
+            danger
+            htmlType="button"
+            onClick={() => form.resetFields()}
+          >
+            Clear
           </Button>
         </Form.Item>
       </Form>

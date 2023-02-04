@@ -14,9 +14,18 @@ export default async function handler(
       let content = {} as tplotOptions;
       content["en"] = req.body.english;
       content[req.body.lang] = req.body.value;
-      
-      let result = await Langs.create({content});
-      res.status(200).json(result);
+
+      let isWordExist = await Langs.findOne({ "content.en": req.body.english });
+      if (isWordExist) {
+        let result = await Langs.updateOne(
+          { "content.en": req.body.english },
+          { content }
+        );
+        res.status(200).json(result);
+      } else {
+        let result = await Langs.create({ content });
+        res.status(200).json(result);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(500).json(err.message);

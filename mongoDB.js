@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const Vietnamese = require("./model/vn");
-const Chinese = require("./model/cn");
-const Thai = require("./model/th");
 const Langs = require("./model/all");
 mongoose.set("strictQuery", false);
 
@@ -12,4 +9,4 @@ try {
   console.log(err);
 }
 
-module.exports = { Vietnamese, Chinese, Thai, Langs };
+module.exports = { Langs };

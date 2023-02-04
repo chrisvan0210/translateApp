@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import AddForm from "@/components/AddForm";
 import GetForm from "@/components/GetForm";
 import { useState } from "react";
+import { Button } from "antd";
 
 export default function Home() {
   const [tab, setTab] = useState(0);
@@ -21,7 +22,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.mainnav}>
           {emptyArray.map((menu, index) => {
-            return <button key={index} onClick={()=>setTab(index)}>{menu}</button>;
+            return <Button type={`${index === tab ? "primary" : "default"}`} key={index} onClick={()=>setTab(index)}>{menu}</Button>;
           })}
         </div>
           {listComp.map((component, index) => {

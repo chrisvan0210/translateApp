@@ -7,7 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.body) {
-    console.log(req.body.keyword);
     try {
       let result = await Langs.findOne({ "content.en": req.body.keyword });
       res.status(200).json(result);
