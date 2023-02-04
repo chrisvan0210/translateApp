@@ -56,14 +56,16 @@ function GetForm() {
   ]);
   const renderText = transArray.map((item, index) => (
     <div className="result-each" key={index}>
-      <div>{item[0].toUpperCase()}: </div>
       {translate?.vn && (
-        <div className="box-text">
-          <p>{item[1]}</p>
-          <Button type="dashed" onClick={() => copy(item[1])}>
-            Copy
-          </Button>
-        </div>
+        <>
+          <div>{item[0].toUpperCase()}: </div>
+          <div className="box-text">
+            <p>{item[1]}</p>
+            <Button type="dashed" onClick={() => copy(item[1])}>
+              Copy
+            </Button>
+          </div>
+        </>
       )}
     </div>
   ));

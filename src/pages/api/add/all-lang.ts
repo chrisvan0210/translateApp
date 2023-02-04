@@ -12,14 +12,17 @@ export default async function handler(
   if (req.body) {
     try {
       let content = {} as tplotOptions;
+      let isWordExist = await Langs.findOne({ "content.en": req.body.english });
       content["en"] = req.body.english;
       content[req.body.lang] = req.body.value;
-
-      let isWordExist = await Langs.findOne({ "content.en": req.body.english });
       if (isWordExist) {
+        content["vn"] = isWordExist.content.vn;
+        content["cn"] = isWordExist.content.cn;
+        content["th"] = isWordExist.content.th;
+        content[req.body.lang] = req.body.value;
         let result = await Langs.updateOne(
           { "content.en": req.body.english },
-          { content }
+          { content} 
         );
         res.status(200).json(result);
       } else {
