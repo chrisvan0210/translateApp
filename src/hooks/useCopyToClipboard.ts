@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {message} from "antd"
+import { message } from "antd";
 
 type CopiedValue = string | null;
 type CopyFn = (text: string) => Promise<boolean>; // Return success
@@ -18,7 +18,7 @@ function useCopyToClipboard(): [CopiedValue, CopyFn] {
       text = text.replace(/"/g, "");
       await navigator.clipboard.writeText(text);
       setCopiedText(text);
-      message.success("Copied successfully");
+      message.success("Copied!");
       return true;
     } catch (error) {
       console.warn("Copy failed", error);

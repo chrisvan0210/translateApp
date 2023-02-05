@@ -9,7 +9,6 @@ interface LanguagesType {
   th: string;
 }
 
-let baseUrl = "http://localhost:3000/api/";
 const layout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 },
@@ -26,10 +25,12 @@ function GetForm() {
   const [translate, setTranslate] = useState<LanguagesType>(initialState);
   const [form] = Form.useForm();
   const [value, copy] = useCopyToClipboard();
+  const [loadings, setLoadings] = useState<boolean>(false);
 
   const onFinish = async (values: any) => {
+    setLoadings(true);
     try {
-      const result = await fetch(baseUrl + `/get/all-lang`, {
+      const result = await fetch("/api/get/all-lang", {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify(values),
@@ -45,7 +46,9 @@ function GetForm() {
     } catch (err) {
       console.log(err);
     }
+    setLoadings(false);
   };
+
   const onFinishFailed = (err: any) => {
     console.log("failed", err);
   };
@@ -54,6 +57,7 @@ function GetForm() {
     key,
     translate[key as keyof LanguagesType],
   ]);
+
   const renderText = transArray.map((item, index) => (
     <div className="result-each" key={index}>
       {translate?.vn && (
@@ -91,8 +95,8 @@ function GetForm() {
           <Input.TextArea rows={3} />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
-          <Button type="primary" htmlType="submit">
-            Submit
+          <Button type="primary" htmlType="submit" loading={loadings}>
+            Get Translation
           </Button>
           <Button
             type="primary"

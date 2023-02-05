@@ -9,8 +9,8 @@ import { Button } from "antd";
 
 export default function Home() {
   const [tab, setTab] = useState(0);
-  const listComp = [<AddForm />, <GetForm />];
-  let emptyArray = ["Add Words", "Get Translations"]
+  const listComp = [<AddForm key={0} />, <GetForm key={1} />];
+  let emptyArray = ["Add Words", "Get Translations"];
   return (
     <>
       <Head>
@@ -22,21 +22,27 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.mainnav}>
           {emptyArray.map((menu, index) => {
-            return <Button type={`${index === tab ? "primary" : "default"}`} key={index} onClick={()=>setTab(index)}>{menu}</Button>;
-          })}
-        </div>
-          {listComp.map((component, index) => {
             return (
-              <div
+              <Button
+                type={`${index === tab ? "primary" : "default"}`}
                 key={index}
-                className={`${styles.menu} ${
-                  index === tab ? styles.active : ""
-                }`}
+                onClick={() => setTab(index)}
               >
-                {component}
-              </div>
+                {menu}
+              </Button>
             );
           })}
+        </div>
+        {listComp.map((component, index) => {
+          return (
+            <div
+              key={index}
+              className={`${styles.menu} ${index === tab ? styles.active : ""}`}
+            >
+              {component}
+            </div>
+          );
+        })}
       </main>
     </>
   );

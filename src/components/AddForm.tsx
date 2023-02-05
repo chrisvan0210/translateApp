@@ -1,4 +1,5 @@
 import { Button, Form, Input, Select, message } from "antd";
+import { useState } from "react";
 import { AddFormDiv } from "./styled";
 
 interface ContentType {
@@ -7,8 +8,6 @@ interface ContentType {
   lang: string;
 }
 
-let baseUrl = "http://localhost:3000/api/";
-
 const layout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 },
@@ -16,10 +15,12 @@ const layout = {
 
 const AddForm = () => {
   const [form] = Form.useForm();
+  const [loadings, setLoadings] = useState<boolean>(false);
 
   const onFinish = async (values: ContentType) => {
+    setLoadings(true);
     try {
-      const result = await fetch(baseUrl + `/add/all-lang`, {
+      const result = await fetch("/api/add/all-lang", {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify(values),
@@ -27,10 +28,12 @@ const AddForm = () => {
       let data = await result.json();
       if (data !== null || data.content) {
         form.resetFields();
-        if(data.content) {
-            message.success("Added successfully!");
-        }else{
-            message.success("Updated the words already exist!");
+        if (data.content) {
+          message.success("Added successfully!");
+        } else {
+          message.success(
+            "Updated for " + values.lang + " only cause words already exist!"
+          );
         }
       } else {
         message.warning("Add fail!");
@@ -39,6 +42,7 @@ const AddForm = () => {
       console.log(err);
       message.info("Added Failed!");
     }
+    setLoadings(false);
   };
   const onFinishFailed = (err: any) => {
     console.log("failed", err);
@@ -59,7 +63,9 @@ const AddForm = () => {
         <Form.Item
           label="English Contents"
           name="english"
-          rules={[{ required: true, message: "Please input english contents!" }]}
+          rules={[
+            { required: true, message: "Please input english contents!" },
+          ]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
           <Input.TextArea rows={4} />
@@ -73,8 +79,10 @@ const AddForm = () => {
         >
           <Input.TextArea rows={4} />
         </Form.Item>
-        <Form.Item label="Language" name="lang"
-        rules={[{ required: true, message: "Please select the language!" }]}
+        <Form.Item
+          label="Language"
+          name="lang"
+          rules={[{ required: true, message: "Please select the language!" }]}
         >
           <Select
             style={{ width: 120 }}
@@ -87,7 +95,7 @@ const AddForm = () => {
           />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={loadings}>
             Submit
           </Button>
           <Button
