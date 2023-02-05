@@ -4,13 +4,88 @@ import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import AddForm from "@/components/AddForm";
 import GetForm from "@/components/GetForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "antd";
+import { useAppSelector, useAppDispatch, RootState } from "@/store";
+import { decrement, increment } from "@/store/translation/translateSlice";
+import { ContentsDiv } from "@/components/styled";
+import useCopyToClipboard from "@/hooks/useCopyToClipboard";
+
+interface LanguagesType {
+  content: {
+    en: string;
+    vn: string;
+    cn: string;
+    th: string;
+  };
+}
+interface SelectedType {
+  en: string;
+  vn: string;
+  cn: string;
+  th: string;
+}
 
 export default function Home() {
+  const [numWords, setNumWords] = useState<Array<LanguagesType>>([]);
+  const [selected, setSelected] = useState<SelectedType>();
   const [tab, setTab] = useState(0);
-  const listComp = [<AddForm key={0} />, <GetForm key={1} />];
+  const [value, copy] = useCopyToClipboard();
   let emptyArray = ["Add Words", "Get Translations"];
+
+  const testState = useAppSelector((state: RootState) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  const pullWords = async () => {
+    const result = await fetch("/api/get/limit-words", {
+      method: "POST",
+      body: "2",
+    });
+    let data = await result.json();
+    setNumWords(data);
+  };
+  const handleRerender = () => {
+    pullWords();
+  };
+  const listComp = [
+    <AddForm key={0} handleRerender={handleRerender} />,
+    <GetForm key={1} />,
+  ];
+
+  useEffect(() => {
+    pullWords();
+    return () => {
+      pullWords;
+    };
+  }, []);
+
+  const showSelectedWord = (index: number) => {
+    setSelected(numWords[index].content);
+  };
+  // Show all translations after fetch
+  let transArray;
+  if (selected) {
+    transArray = Object.keys(selected).map((key) => [
+      key,
+      selected[key as keyof SelectedType],
+    ]);
+  }
+
+  const renderText = transArray?.map((item, index) => (
+    <div className="result-each" key={index}>
+      {selected?.vn && (
+        <>
+          <div>{item[0].toUpperCase()}: </div>
+          <div className="box-text">
+            <p>{item[1]}</p>
+            <Button type="dashed" onClick={() => copy(item[1])}>
+              Copy
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  ));
   return (
     <>
       <Head>
@@ -20,6 +95,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        {/* Menu */}
         <div className={styles.mainnav}>
           {emptyArray.map((menu, index) => {
             return (
@@ -33,6 +109,7 @@ export default function Home() {
             );
           })}
         </div>
+        {/* List of components */}
         {listComp.map((component, index) => {
           return (
             <div
@@ -43,6 +120,26 @@ export default function Home() {
             </div>
           );
         })}
+
+        <div className={styles.recentwrapper}>
+          <div className={styles.recentword}>
+            <div>Recently Added:</div>
+            <div className={styles.wordbutton}>
+              {numWords?.map((word, index) => {
+                return (
+                  <Button key={index} onClick={() => showSelectedWord(index)}>
+                    {word.content.en.length > 20
+                      ? word.content.en.toString().slice(0, 20).concat("...")
+                      : word.content.en}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+          <ContentsDiv>
+            <div className="results">{renderText}</div>
+          </ContentsDiv>
+        </div>
       </main>
     </>
   );

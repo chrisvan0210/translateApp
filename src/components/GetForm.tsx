@@ -53,11 +53,11 @@ function GetForm() {
     console.log("failed", err);
   };
 
+  // Show all translations after fetch
   let transArray = Object.keys(translate).map((key) => [
     key,
     translate[key as keyof LanguagesType],
   ]);
-
   const renderText = transArray.map((item, index) => (
     <div className="result-each" key={index}>
       {translate?.vn && (

@@ -13,7 +13,7 @@ const layout = {
   wrapperCol: { span: 20 },
 };
 
-const AddForm = () => {
+const AddForm = ({ handleRerender }: any) => {
   const [form] = Form.useForm();
   const [loadings, setLoadings] = useState<boolean>(false);
 
@@ -43,6 +43,7 @@ const AddForm = () => {
       message.info("Added Failed!");
     }
     setLoadings(false);
+    handleRerender();
   };
   const onFinishFailed = (err: any) => {
     console.log("failed", err);

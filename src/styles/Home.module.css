@@ -8,7 +8,7 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-.mainnav{
+.mainnav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,11 +19,31 @@
   cursor: pointer;
 }
 
-.menu{
+.menu {
   width: 100%;
   display: none;
-
 }
-.menu.active{
+.menu.active {
   display: block;
+}
+.recentwrapper {
+  width: 100%;
+  margin-top: 30px;
+  padding-left: 80px;
+}
+.recentword {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.recentword div:first-child {
+  margin-bottom: 10px;
+}
+.wordbutton {
+  display: flex;
+  flex-direction: row;
+}
+.wordbutton button {
+  margin: 5px;
 }
