@@ -39,6 +39,7 @@
 }
 .recentword div:first-child {
   margin-bottom: 10px;
+  margin-right: 10px;
 }
 .wordbutton {
   display: flex;
@@ -46,4 +47,8 @@
 }
 .wordbutton button {
   margin: 5px;
+}
+
+.spinin {
+  margin: 0 auto;
 }
