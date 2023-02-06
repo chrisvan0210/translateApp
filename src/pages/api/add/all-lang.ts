@@ -11,9 +11,10 @@ export default async function handler(
 ) {
   if (req.body) {
     try {
+      let enChecking = req.body.english.toLowerCase();
       let content = {} as tplotOptions;
-      let isWordExist = await Langs.findOne({ "content.en": req.body.english });
-      content["en"] = req.body.english;
+      let isWordExist = await Langs.findOne({ "content.en": enChecking });
+      content["en"] = enChecking;
       content[req.body.lang] = req.body.value;
       if (isWordExist) {
         content["vn"] = isWordExist.content.vn;
@@ -21,7 +22,7 @@ export default async function handler(
         content["th"] = isWordExist.content.th;
         content[req.body.lang] = req.body.value;
         let result = await Langs.updateOne(
-          { "content.en": req.body.english },
+          { "content.en": enChecking },
           { content} 
         );
         res.status(200).json(result);
