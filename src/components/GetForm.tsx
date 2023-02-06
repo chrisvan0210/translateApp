@@ -60,7 +60,7 @@ function GetForm() {
   ]);
   const renderText = transArray.map((item, index) => (
     <div className="result-each" key={index}>
-      {translate?.vn && (
+      {translate?.en && (
         <>
           <div>{item[0].toUpperCase()}: </div>
           <div className="box-text">

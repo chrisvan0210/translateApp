@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import AddForm from "@/components/AddForm";
 import GetForm from "@/components/GetForm";
 import { useEffect, useState } from "react";
-import { Button, Spin } from "antd";
+import { Button, Spin, Col, Row } from "antd";
 import { useAppSelector, useAppDispatch, RootState } from "@/store";
 import { decrement, increment } from "@/store/translation/translateSlice";
 import { ContentsDiv } from "@/components/styled";
@@ -60,8 +60,6 @@ export default function Home() {
   }, []);
 
   const showSelectedWord = (index: number) => {
-    
-    
     setSelected(recentWords[index].content);
   };
   // Show all translations after fetch
@@ -72,15 +70,15 @@ export default function Home() {
       selected[key as keyof SelectedType],
     ]);
   }
-  console.log("data",transArray)
+  
   const renderText = transArray?.map((item, index) => (
     <div className="result-each" key={index}>
       {selected?.en && (
         <>
           <div>{item[0].toUpperCase()}: </div>
-          <div className="box-text">
+          <div className="box-text" >
             <p>{item[1]}</p>
-            <Button type="dashed" onClick={() => copy(item[1])}>
+            <Button type="dashed" onClick={() => copy(item[1])} style={{margin:"0 5px"}}>
               Copy
             </Button>
           </div>
@@ -125,25 +123,38 @@ export default function Home() {
 
         <div className={styles.recentwrapper}>
           <div className={styles.recentword}>
-            <div>Recently Added:</div>
-            {recentWords.length > 0 ? (
-              <div className={styles.wordbutton}>
-                {recentWords.map((word, index) => {
-                  return (
-                    <Button key={index} onClick={() => showSelectedWord(index)}>
-                      {word.content.en.length > 20
-                        ? word.content.en.toString().slice(0, 20).concat("...")
-                        : word.content.en}
-                    </Button>
-                  );
-                })}
-              </div>
-            ) : (
-              <Spin className="spinin">
-                <div className="content" />
-              </Spin>
-            )}
+            <Row>
+              <Col span={4}>
+                <div>Recently Added:</div>
+              </Col>
+              <Col span={20}>
+                {recentWords.length > 0 ? (
+                  <div className={styles.wordbutton}>
+                    {recentWords.map((word, index) => {
+                      return (
+                        <Button
+                          key={index}
+                          onClick={() => showSelectedWord(index)}
+                        >
+                          {word.content.en.length > 20
+                            ? word.content.en
+                                .toString()
+                                .slice(0, 20)
+                                .concat("...")
+                            : word.content.en}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <Spin className="spinin">
+                    <div className="content" />
+                  </Spin>
+                )}
+              </Col>
+            </Row>
           </div>
+
           <ContentsDiv>
             <div className="results">{renderText}</div>
           </ContentsDiv>

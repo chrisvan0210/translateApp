@@ -29,7 +29,7 @@
 .recentwrapper {
   width: 100%;
   margin-top: 30px;
-  padding-left: 80px;
+  /* padding-left: 80px; */
 }
 .recentword {
   margin-bottom: 10px;
@@ -39,11 +39,12 @@
 }
 .recentword div:first-child {
   margin-bottom: 10px;
-  margin-right: 10px;
+  text-align: right;
 }
 .wordbutton {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 .wordbutton button {
   margin: 5px;
@@ -52,3 +53,4 @@
 .spinin {
   margin: 0 auto;
 }
+
