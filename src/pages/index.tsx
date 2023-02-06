@@ -60,6 +60,8 @@ export default function Home() {
   }, []);
 
   const showSelectedWord = (index: number) => {
+    
+    
     setSelected(recentWords[index].content);
   };
   // Show all translations after fetch
@@ -70,10 +72,10 @@ export default function Home() {
       selected[key as keyof SelectedType],
     ]);
   }
-
+  console.log("data",transArray)
   const renderText = transArray?.map((item, index) => (
     <div className="result-each" key={index}>
-      {selected?.vn && (
+      {selected?.en && (
         <>
           <div>{item[0].toUpperCase()}: </div>
           <div className="box-text">
