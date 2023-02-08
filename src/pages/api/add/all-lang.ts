@@ -14,19 +14,11 @@ export default async function handler(
       let enChecking = req.body.english.toLowerCase();
       let content = {} as tplotOptions;
       let isWordExist = await Langs.findOne({ "content.en": enChecking });
-      content["en"] = enChecking;
-      content[req.body.lang] = req.body.value;
       if (isWordExist) {
-        content["vn"] = isWordExist.content.vn;
-        content["cn"] = isWordExist.content.cn;
-        content["th"] = isWordExist.content.th;
-        content[req.body.lang] = req.body.value;
-        let result = await Langs.updateOne(
-          { "content.en": enChecking },
-          { content} 
-        );
-        res.status(200).json(result);
+        res.status(200).json({ message: "english words already exist" });
       } else {
+        content["en"] = enChecking;
+        content[req.body.lang] = req.body.value;
         let result = await Langs.create({ content });
         res.status(200).json(result);
       }

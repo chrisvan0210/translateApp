@@ -6,6 +6,7 @@ interface ContentType {
   english: string;
   value: string;
   lang: string;
+  [key: string]: string;
 }
 
 const layout = {
@@ -19,6 +20,9 @@ const AddForm = ({ handleRerender }: any) => {
 
   const onFinish = async (values: ContentType) => {
     setLoadings(true);
+    for (let key in values) {
+      values[key] = values[key].trim();
+    }
     try {
       const result = await fetch("/api/add/all-lang", {
         headers: { "Content-Type": "application/json" },
@@ -66,6 +70,14 @@ const AddForm = ({ handleRerender }: any) => {
           name="english"
           rules={[
             { required: true, message: "Please input english contents!" },
+            {
+              validator: (_, value) => {
+                value = value.trim();
+                return value !==""
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Input should not only whitespace characters"));
+              },
+            },
           ]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
@@ -75,7 +87,17 @@ const AddForm = ({ handleRerender }: any) => {
         <Form.Item
           label="Translation"
           name="value"
-          rules={[{ required: true, message: "Please input the translation" }]}
+          rules={[
+            { required: true, message: "Please input the translation" },
+            {
+              validator: (_, value) => {
+                value = value.trim();
+                return value !==""
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Input should not only whitespace characters"));
+              },
+            },
+          ]}
           wrapperCol={{ ...layout.wrapperCol }}
         >
           <Input.TextArea rows={4} />
