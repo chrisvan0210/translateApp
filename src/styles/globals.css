@@ -109,25 +109,5 @@ a {
 .table-translate {
   display: block;
   width: 100%;
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.table-head {
-  color: #fff;
-  font-weight: 600;
-  background: #000;
-}
-
-.table-head .ant-col {
-  padding: 7px 5px;
-}
-
-.table-body .ant-col {
-  padding: 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.table-body:nth-child(odd) {
-  background: #fff;
+  margin-top: 5px;
 }

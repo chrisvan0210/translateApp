@@ -19,6 +19,7 @@ interface LanguagesType {
         cn: string;
         th: string;
     };
+    _id: number;
 }
 interface SelectedType {
     en: string;
@@ -141,7 +142,7 @@ export default function Home() {
                     );
                 })}
 
-                <div className={styles.recentwrapper}>
+                {/* <div className={styles.recentwrapper}>
                     <div className={styles.recentword}>
                         <Row>
                             <Col span={4}>
@@ -180,7 +181,7 @@ export default function Home() {
                     <ContentsDiv>
                         <div className="results">{renderText}</div>
                     </ContentsDiv>
-                </div>
+                </div> */}
                 <TableForm allWords={allWords} />
             </main>
         </>
