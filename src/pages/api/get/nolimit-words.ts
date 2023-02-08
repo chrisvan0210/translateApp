@@ -7,7 +7,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        let result = await Langs.find().limit(20).sort({ _id: -1 });
+        let result = await Langs.find().sort({ _id: -1 });
         res.status(200).json(result);
     } catch (err: unknown) {
         if (err instanceof Error) {
